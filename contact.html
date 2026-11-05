@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initiate Project | TechMATRIX</title>
+    <link rel="icon" href="final_logo.png" >
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        crimson: {
+                            400: '#f87171',
+                            500: '#dc2626',
+                            600: '#b91c1c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Firebase SDK Integration -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
+      import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCPJJFGVY_hRLzIgf5ACWJg3rTTd60HJTM",
+        authDomain: "tech-materix.firebaseapp.com",
+        projectId: "tech-materix",
+        storageBucket: "tech-materix.firebasestorage.app",
+        messagingSenderId: "197311365114",
+        appId: "1:197311365114:web:2ad429835b7be8bfa8ee43"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      window.submitToFirebase = async (formData) => {
+        try {
+          const dataToSave = {
+            ...formData,
+            createdAt: serverTimestamp()
+          };
+          await addDoc(collection(db, "projects"), dataToSave);
+          return { success: true };
+        } catch (e) {
+          console.error("Background save failed:", e);
+          return { success: false, error: e.message };
+        }
+      };
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-6">
+
+    <div class="max-w-2xl w-full cyber-card rounded-3xl overflow-hidden border border-red-500/30 shadow-2xl shadow-red-500/20">
+        <div class="bg-gradient-to-br from-slate-900 via-slate-950 to-red-950/40 p-8 text-center border-b border-red-500/20">
+            <h2 class="text-3xl font-orbitron font-extrabold text-white mb-2">INITIATE <span class="text-red-500">PROJECT</span></h2>
+            <p class="text-slate-400 font-medium">Submit your technical specifications to the TechMATRIX engineering labs.</p>
+        </div>
+
+        <form id="contact-form" class="p-10 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-orbitron text-slate-400 mb-2 tracking-wider">NAME</label>
+                    <input type="text" id="name" required class="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition" placeholder="John Doe">
+                </div>
+                <div>
+                    <label class="block text-xs font-orbitron text-slate-400 mb-2 tracking-wider">EMAIL</label>
+                    <input type="email" id="email" required class="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition" placeholder="john@example.com">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-orbitron text-slate-400 mb-2 tracking-wider">SERVICE REQUIRED</label>
+                <select id="service" class="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition">
+                    <option value="Website Design">Website Design</option>
+                    <option value="Application Development">Application Development</option>
+                    <option value="Hardware Projects">Hardware Projects</option>
+                </select>
+            </div>
+
+            <!-- Hardware Specific Fields Container -->
+            <div id="hardware-fields" class="hidden space-y-6 border-l-2 border-red-500/50 pl-4 py-2 bg-slate-900/30 rounded-r-lg">
+                <div>
+                    <label class="block text-xs font-orbitron text-slate-400 mb-2 tracking-wider">TOTAL INVESTMENT</label>
+                    <input type="text" id="total-investment" class="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition" placeholder="e.g. ₹5,000 - ₹10,000">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-orbitron text-slate-400 mb-2 tracking-wider">NEED IOT OR BOARD?</label>
+                    <select id="need-iot" class="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                </div>
+
+                <div id="board-spec-container" class="hidden">
+                    <label class="block text-xs font-orbitron text-slate-400 mb-2 tracking-wider">BOARD OR IOT DETAILS</label>
+                    <input type="text" id="board-details" class="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition" placeholder="e.g., ESP32, Arduino Uno, Raspberry Pi 4">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-orbitron text-slate-400 mb-2 tracking-wider">PROJECT DETAILS</label>
+                <textarea id="details" rows="5" required class="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition" placeholder="Describe your project specification..."></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-4 rounded-lg font-orbitron font-bold text-sm bg-gradient-to-r from-red-600 to-slate-600 text-white hover:from-red-500 hover:to-slate-500 transition shadow-lg shadow-red-500/20">
+                TRANSMIT MESSAGE
+            </button>
+        </form>
+
+        <div class="p-6 text-center bg-slate-900/50">
+            <a href="index.html" class="text-sm text-slate-500 hover:text-red-400 transition font-orbitron">← RETURN TO MAIN TERMINAL</a>
+        </div>
+    </div>
+
+    <script>
+        const serviceSelect = document.getElementById('service');
+        const hardwareFields = document.getElementById('hardware-fields');
+        const needIotSelect = document.getElementById('need-iot');
+        const boardSpecContainer = document.getElementById('board-spec-container');
+
+        serviceSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'Hardware Projects') {
+                hardwareFields.classList.remove('hidden');
+            } else {
+                hardwareFields.classList.add('hidden');
+                boardSpecContainer.classList.add('hidden');
+                needIotSelect.value = 'no';
+            }
+        });
+
+        needIotSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'yes') {
+                boardSpecContainer.classList.remove('hidden');
+            } else {
+                boardSpecContainer.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('contact-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const isHardware = serviceSelect.value === 'Hardware Projects';
+
+            const formData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                service: serviceSelect.value,
+                totalInvestment: isHardware ? document.getElementById('total-investment').value.trim() : null,
+                needIot: isHardware ? needIotSelect.value : null,
+                boardDetails: isHardware && needIotSelect.value === 'yes' ? document.getElementById('board-details').value.trim() : null,
+                details: document.getElementById('details').value.trim()
+            };
+
+            alert('TRANSMISSION SUCCESSFUL: Your data has been queued for the TechMATRIX Cloud.');
+            e.target.reset();
+            hardwareFields.classList.add('hidden');
+            boardSpecContainer.classList.add('hidden');
+
+            if (window.submitToFirebase) {
+                window.submitToFirebase(formData).then(result => {
+                    if (!result.success) {
+                        console.error('Background save failed:', result.error);
+                    } else {
+                        console.log('Background save complete.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
